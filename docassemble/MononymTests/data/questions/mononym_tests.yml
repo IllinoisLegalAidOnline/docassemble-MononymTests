@@ -1,0 +1,129 @@
+metadata:
+  title: Mononym tests
+  short title: Mononym tests
+  comment: Testing out some mononyms
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALToolbox:phone-number-validation.yml
+  - docassemble.ILAO:ilao-interview-framework.yml
+  - docassemble.ILAO:shared-basic-questions.yml
+---
+objects:
+  - users: ALPeopleList.using(there_are_any=True)
+---
+sections:
+  - review_answers: Review your answers
+---
+# interview order block
+mandatory: True
+code: |
+  ilao_easy_form_title = "Mononym tests"
+  ilao_easy_form_url = "https://www.illinoislegalaid.org/"
+  names_intro
+  users[0].name.first
+  mononyms
+  users[1].name.first
+  users[2].name.first
+  users[3].name.first
+  end
+---
+id: names intro
+continue button field: names_intro
+question: |
+    Names
+subquestion: |
+  Historically, ILAO's Easy Forms have asked for users' full names by asking for their first, middle, and last names.
+
+  The following page is our standard way to ask for a user's name.
+---
+id: user 0 name
+sets:
+    - users[0].name.first
+    - users[0].name.last
+    - users[0].name.middle
+    - users[0].name.suffix
+question:  |
+  What is your name?
+fields:
+  - code: |
+      users[0].name_fields()
+---
+id: mononyms
+continue button field: mononyms
+question: |
+    Mononyms
+subquestion: |
+    The problem with the previous page is that it required the user to enter both a first and last name. Unfortunately, we have received feedback that this is a problem for people who do not have both a first and last name. 
+
+    We have drafted three possible new standards for name questions. The following pages show these options
+---
+sets:
+  - users[1].name.first
+id: user 1 name
+question: |
+  What is your name?
+fields:
+  - code: |
+      users[1].name_fields(person_or_business='unsure')
+---
+generic object: ALIndividual
+template: x.person_type_label
+content: |
+ Do you have a first and last name, or just one name?
+---
+generic object: ALIndividual
+template: x.business_name_label
+content: |
+  Name
+---
+generic object: ALIndividual
+template: x.individual_choice_label
+content: |
+  First and last names
+---
+generic object: ALIndividual
+template: x.business_choice_label
+content: |
+  One name
+---
+sets:
+  - users[2].name.first
+id: user 2 name
+question: |
+  What is your name?
+fields:
+  - Full name: users[2].name.first
+---
+sets:
+  - users[3].name.first
+id: user 3 name
+question: |
+  What is your name?
+subquestion: |
+    ${collapse_template(mononym_help)}
+fields:
+  - First: users[3].name.first
+  - Middle: users[3].name.middle
+    required: False
+  - Last: users[3].name.last
+    required: False
+  - Suffix: users[3].name.suffix
+    code: |
+      name_suffix()
+    required: False
+---
+template: mononym_help
+subject: |
+  **What if I don't have a first and last name?**
+content: |  
+  If you only have one name, you can enter it in the field labeled **First** and leave the other fields blank.
+---
+id: end
+event: end
+question: |
+  Going forward
+subquestion: |
+  Once we have settled on a standard, we plan to use it in most of our DocAssemble programs. 
+  
+  Unfortunately, some efiling platforms require users to input both first and last names. As a result, we may need to retain the old version of the name question in some programs to prevent incongruence between the completed forms and the user name input into e-filing platforms.
