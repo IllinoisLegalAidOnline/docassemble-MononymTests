@@ -64,8 +64,35 @@ id: user 1 name
 question: |
   What is your name?
 fields:
-  - code: |
-      users[1].name_fields(person_or_business='unsure')
+  - Full name: users[1].name.first
+    show if: mononym_check
+  - First: users[1].name.first
+    show if: 
+      variable: mononym_check
+      is: False
+  - Middle: users[1].name.middle
+    required: False
+    show if: 
+      variable: mononym_check
+      is: False
+  - Last: users[1].name.last
+    show if: 
+      variable: mononym_check
+      is: False
+  - Suffix: users[1].name.suffix
+    show if: 
+      variable: mononym_check
+      is: False
+    code: |
+      name_suffix()
+    required: False
+  - I do not have both a first name and a last name.: mononym_check
+    datatype: yesno
+    default: False
+    required: False
+#fields:
+#  - code: |
+#      users[1].name_fields(person_or_business='unsure')
 ---
 generic object: ALIndividual
 template: x.person_type_label
@@ -92,8 +119,16 @@ sets:
 id: user 2 name
 question: |
   What is your name?
+subquestion: |
+    ${collapse_template(name_order_help)}
 fields:
   - Full name: users[2].name.first
+---
+template: name_order_help
+subject: |
+  **About name order**
+content: |  
+  Forms in Illinois expect that you will list your given name, also known as a personal name, first. They expect that you will list your surname, also known as a family name, last.
 ---
 sets:
   - users[3].name.first
@@ -115,7 +150,7 @@ fields:
 ---
 template: mononym_help
 subject: |
-  **What if I don't have a first and last name?**
+  **What to do if you don't have a first and last name**
 content: |  
   If you only have one name, you can enter it in the field labeled **First** and leave the other fields blank.
 ---
@@ -124,6 +159,6 @@ event: end
 question: |
   Going forward
 subquestion: |
-  Once we have settled on a standard, we plan to use it in most of our DocAssemble programs. 
+  Once we have settled on a standard, we plan to use it in most of our Easy Forms. 
   
-  Unfortunately, some efiling platforms require users to input both first and last names. As a result, we may need to retain the old version of the name question in some programs to prevent incongruence between the completed forms and the user name input into e-filing platforms.
+  Unfortunately, some efiling platforms require users to input both first and last names. As a result, we may need to retain the old version of the name question in some Easy Forms to prevent incongruence between the completed forms and the user name input into e-filing platforms.
