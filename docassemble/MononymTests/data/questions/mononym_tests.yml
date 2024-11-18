@@ -144,6 +144,8 @@ fields:
   - Last: users[3].name.last
     required: False
   - Suffix: users[3].name.suffix
+    help: |
+      Some names have a suffix after the last name, such as "Sr." or "Jr." If your name does not have a suffix, you can leave this blank.
     code: |
       name_suffix()
     required: False
@@ -152,7 +154,7 @@ template: mononym_help
 subject: |
   **What to do if you don't have a first and last name**
 content: |  
-  If you only have one name, you can enter it in the field labeled **First** and leave the other fields blank.
+  If you have one name, you can enter it in the field labeled **First** and leave the other fields blank.
 ---
 id: end
 event: end
